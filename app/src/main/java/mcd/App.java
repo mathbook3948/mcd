@@ -3,10 +3,33 @@
  */
 package mcd;
 
-import mcd.config.DiscordConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import mcd.config.AppConfig;
 
 public class App {
+
+    private static final Logger logger = LoggerFactory.getLogger(App.class);
+
     public static void main(String[] args) {
-        Runtime.getRuntime().addShutdownHook(new Thread(DiscordConfig.getInstance()::shutdown));
+        try {
+            logger.info("Starting MCD Discord Bot...");
+
+            // 설정 초기화
+            AppConfig appConfig = AppConfig.getInstance();
+
+            // Graceful shutdown
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                logger.info("Shutdown hook triggered");
+                appConfig.shutdown();
+            }));
+
+            logger.info("MCD Discord Bot started successfully");
+
+        } catch (Exception e) {
+            logger.error("Failed to start MCD Discord Bot", e);
+            System.exit(1);
+        }
     }
 }
