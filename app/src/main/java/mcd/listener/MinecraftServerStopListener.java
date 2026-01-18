@@ -41,7 +41,7 @@ public class MinecraftServerStopListener extends AbstractListener {
         }
 
         // 서버 종료 시도
-        event.deferReply().queue();
+        event.deferReply(true).queue();
 
         try {
             minecraftService.stopServer();

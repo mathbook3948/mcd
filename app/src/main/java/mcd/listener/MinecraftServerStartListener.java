@@ -41,7 +41,7 @@ public class MinecraftServerStartListener extends AbstractListener {
         }
 
         // 서버 시작 시도
-        event.deferReply().queue();
+        event.deferReply(true).queue();
 
         try {
             minecraftService.startServer();
