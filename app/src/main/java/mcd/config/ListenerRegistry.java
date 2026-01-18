@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mcd.listener.AbstractListener;
+import mcd.listener.MinecraftServerStartListener;
+import mcd.listener.MinecraftServerStopListener;
 import mcd.listener.ServerInfoListener;
 
 /**
@@ -16,6 +18,8 @@ public class ListenerRegistry {
     static {
         // 새로운 리스너 추가 위치#########################
         registerListener(ServerInfoListener.getInstance());
+        registerListener(MinecraftServerStartListener.getInstance());
+        registerListener(MinecraftServerStopListener.getInstance());
     }
 
     /**
