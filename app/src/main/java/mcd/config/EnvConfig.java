@@ -1,5 +1,6 @@
 package mcd.config;
 
+import lombok.Getter;
 import mcd.exception.ConfigurationException;
 
 /**
@@ -7,10 +8,31 @@ import mcd.exception.ConfigurationException;
  */
 public class EnvConfig {
 
+    @Getter
     private final String discordToken;
+
+    @Getter
+    private final String minMemory;
+    
+    @Getter
+    private final String maxMemory;
+    
+    @Getter
+    private final String minecraftHome;
+
+    @Getter
+    private final String jarFileName;
+
+    @Getter
+    private final String javaHome;
 
     public EnvConfig() {
         this.discordToken = getRequiredEnv("DISCORD_TOKEN");
+        this.minMemory = getRequiredEnv("MIN_MEMORY");
+        this.maxMemory = getRequiredEnv("MAX_MEMORY");
+        this.minecraftHome = getRequiredEnv("MINECRAFT_HOME");
+        this.jarFileName = getOptionalEnv("JAR_FILE_NAME", "server.jar");
+        this.javaHome = getRequiredEnv("JAVA_HOME");
     }
 
     /**
@@ -32,9 +54,5 @@ public class EnvConfig {
     private String getOptionalEnv(String key, String defaultValue) {
         String value = System.getenv(key);
         return (value == null || value.isBlank()) ? defaultValue : value;
-    }
-
-    public String getDiscordToken() {
-        return discordToken;
     }
 }

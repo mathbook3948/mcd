@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import mcd.exception.ConfigurationException;
+import mcd.service.MinecraftService;
 
 /**
  * 애플리케이션 전체 설정 관리 클래스 (Singleton)
@@ -15,18 +16,26 @@ public class AppConfig {
     private static AppConfig instance;
 
     private final EnvConfig envConfig;
+    private final MinecraftConfig minecraftConfig;
+    private final MinecraftService minecraftService;
     private final DiscordConfig discordConfig;
 
     private AppConfig() {
         try {
             logger.info("Starting application configuration...");
 
-            // 환경 변수 검증 및 로드
+            // 1. 환경 변수 검증 및 로드
             logger.info("Loading environment variables...");
             this.envConfig = new EnvConfig();
             logger.info("Environment variables loaded successfully");
 
-            // DiscordConfig 초기화
+            // 2. Minecraft 서버 설정 및 서비스 초기화
+            logger.info("Initializing Minecraft server configuration...");
+            this.minecraftConfig = new MinecraftConfig(envConfig);
+            this.minecraftService = new MinecraftService(minecraftConfig);
+            logger.info("Minecraft server service initialized successfully");
+
+            // 3. Discord 봇 초기화
             logger.info("Initializing Discord bot...");
             this.discordConfig = new DiscordConfig(envConfig);
             logger.info("Discord bot initialized successfully");
@@ -55,6 +64,13 @@ public class AppConfig {
     public void shutdown() {
         logger.info("Shutting down application...");
 
+        // Minecraft 서버 종료
+        if (minecraftService != null) {
+            logger.info("Shutting down Minecraft server...");
+            minecraftService.shutdown();
+        }
+
+        // Discord 봇 종료
         if (discordConfig != null) {
             logger.info("Shutting down Discord bot...");
             discordConfig.shutdown();
@@ -65,6 +81,14 @@ public class AppConfig {
 
     public EnvConfig getEnvConfig() {
         return envConfig;
+    }
+
+    public MinecraftConfig getMinecraftConfig() {
+        return minecraftConfig;
+    }
+
+    public MinecraftService getMinecraftService() {
+        return minecraftService;
     }
 
     public DiscordConfig getDiscordConfig() {
