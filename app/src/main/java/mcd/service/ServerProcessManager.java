@@ -93,8 +93,7 @@ public class ServerProcessManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String finalLine = line;
-                logger.info("[MC] {}", finalLine);
-                // 리스너에게 알림
+                logger.debug("[MC] {}", finalLine);
                 outputListeners.forEach(listener -> listener.accept(finalLine));
             }
         } catch (IOException e) {
